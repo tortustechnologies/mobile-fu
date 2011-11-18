@@ -65,6 +65,6 @@ module MobilizedStyles
       end
     end
 
-    stylesheet_link_tag_without_mobilization(*mobilized_sources)
+    stylesheet_link_tag_without_mobilization(*Engines::RailsExtensions::AssetHelpers.pluginify_sources("stylesheets", *mobilized_sources))
   end
 end
