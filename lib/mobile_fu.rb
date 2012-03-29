@@ -70,9 +70,13 @@ module ActionController
       # the user has opted to use either the 'Standard' view or 'Mobile' view.
       
       def set_mobile_format
-        if is_mobile_device? && !request.xhr?
-          request.format = session[:mobile_view] == false ? :html : :mobile
-          session[:mobile_view] = true if session[:mobile_view].nil?
+        unless request.xhr?
+          if is_mobile_device?
+            request.format = session[:mobile_view] == false ? :html : :mobile
+            session[:mobile_view] = true if session[:mobile_view].nil?
+          else
+            request.format = :mobile if session[:mobile_view]
+          end
         end
       end
       
