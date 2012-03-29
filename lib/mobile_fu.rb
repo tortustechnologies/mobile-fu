@@ -14,23 +14,26 @@ module ActionController
     end
     
     module ClassMethods
-      
-      # Add this to one of your controllers to use MobileFu.  
+
+      # Add this to one of your controllers to use MobileFu.
       #
       #    class ApplicationController < ActionController::Base 
       #      has_mobile_fu
       #    end
       #
-      # You can also force mobile mode by passing in 'true'
+      # You can also force mobile mode by setting the option :test_mode
+      # to true:
       #
       #    class ApplicationController < ActionController::Base 
-      #      has_mobile_fu(true)
+      #      has_mobile_fu(:test_mode => true)
       #    end
         
-      def has_mobile_fu(test_mode = false)
+      def has_mobile_fu(options = {})
+        options.reverse_merge! :test_mode => false
+
         include ActionController::MobileFu::InstanceMethods
 
-        if test_mode 
+        if options[:test_mode]
           before_filter :force_mobile_format
         else
           before_filter :set_mobile_format
