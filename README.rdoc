@@ -54,6 +54,13 @@ in a custom controller action.
   session[:mobile_view] # => Set to true if request format is :mobile and false
                              if set to :html
 
+To automatically set session[:mobile_view] using params[:format], pass the option
+:setup_session => true into has_mobile_fu. In this way, accessing a url with the
+query string "format=mobile" or "format=html" will permanently switch the site's
+mode for your browser.
+
+  has_mobile_fu :setup_session => true
+
 So, different devices need different styling.  Don't worry, we've got this
 baked in to Mobile Fu.
 
