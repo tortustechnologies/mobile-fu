@@ -27,11 +27,23 @@ module ActionController
       #    class ApplicationController < ActionController::Base 
       #      has_mobile_fu(:test_mode => true)
       #    end
+      #
+      # Tell mobile fu to automatically set session[:mobile_view] based on
+      # params[:format] by enabling the option :setup_session.
+      #
+      #    has_mobile_fu(:setup_session => true)
+      #
+      # Then you may switch your session between the two modes by passing
+      # the query string "format=mobile" or "format=html".
         
       def has_mobile_fu(options = {})
-        options.reverse_merge! :test_mode => false
+        options.reverse_merge! :test_mode => false, :setup_session => false
 
         include ActionController::MobileFu::InstanceMethods
+
+        if options[:setup_session]
+          before_filter :set_mobile_session
+        end
 
         if options[:test_mode]
           before_filter :force_mobile_format
@@ -64,6 +76,23 @@ module ActionController
       def force_mobile_format
         request.format = :mobile
         session[:mobile_view] = true if session[:mobile_view].nil?
+      end
+
+      # Change the :mobile_view session var based on params[:format].
+      #
+      # To make mobile-fu use this before_filter, call has_mobile_fu
+      # with the option :use_session => true
+
+      def set_mobile_session
+        Rails.logger.debug "session[:mobile_view] is: #{session[:mobile_view]}"
+        if params[:format]
+          if params[:format] == 'html'
+            session[:mobile_view] = false
+          elsif params[:format] == 'mobile'
+            session[:mobile_view] = true
+          end
+          Rails.logger.debug "session[:mobile_view] changed to: #{session[:mobile_view]}"
+        end
       end
       
       # Determines the request format based on whether the device is mobile or if
