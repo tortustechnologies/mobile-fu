@@ -89,10 +89,10 @@ Hopefully this should help you create some awesome mobile applications.
 == Testing Mobile Interface
 	
 If you want to force the mobile interface for testing, you can either use a 
-mobile device emulator, or you can pass 'true' to has_mobile_fu. 
+mobile device emulator, or you can pass ':test_mode => true' to has_mobile_fu. 
 
   class ApplicationController < ActionController::Base
-    has_mobile_fu(true) 
+    has_mobile_fu :test_mode => true 
   end
 
 
